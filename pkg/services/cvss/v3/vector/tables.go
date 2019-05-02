@@ -75,39 +75,47 @@ var (
 
 func init() {
 	attackVector = newResolver(
+		cvssv3.AttackVector_ATTACK_VECTOR_UNDEFINED, "X",
 		cvssv3.AttackVector_ATTACK_VECTOR_NETWORK, "N",
 		cvssv3.AttackVector_ATTACK_VECTOR_ADJACENT, "A",
 		cvssv3.AttackVector_ATTACK_VECTOR_LOCAL, "L",
 		cvssv3.AttackVector_ATTACK_VECTOR_PHYSICAL, "P",
 	)
 	attackComplexity = newResolver(
+		cvssv3.AttackComplexity_ATTACK_COMPLEXITY_UNDEFINED, "X",
 		cvssv3.AttackComplexity_ATTACK_COMPLEXITY_LOW, "L",
 		cvssv3.AttackComplexity_ATTACK_COMPLEXITY_HIGH, "H",
 	)
 	privilegeRequired = newResolver(
+		cvssv3.PrivilegeRequired_PRIVILEGE_REQUIRED_UNDEFINED, "X",
 		cvssv3.PrivilegeRequired_PRIVILEGE_REQUIRED_NONE, "N",
 		cvssv3.PrivilegeRequired_PRIVILEGE_REQUIRED_LOW, "L",
 		cvssv3.PrivilegeRequired_PRIVILEGE_REQUIRED_HIGH, "H",
 	)
 	userInteraction = newResolver(
+		cvssv3.UserInteraction_USER_INTERACTION_UNDEFINED, "X",
 		cvssv3.UserInteraction_USER_INTERACTION_NONE, "N",
 		cvssv3.UserInteraction_USER_INTERACTION_REQUIRED, "R",
 	)
 	scope = newResolver(
+		cvssv3.Scope_SCOPE_UNDEFINED, "X",
 		cvssv3.Scope_SCOPE_UNCHANGED, "U",
 		cvssv3.Scope_SCOPE_CHANGED, "C",
 	)
 	confidentiality = newResolver(
+		cvssv3.ConfidentialityImpact_CONFIDENTIALITY_IMPACT_UNDEFINED, "X",
 		cvssv3.ConfidentialityImpact_CONFIDENTIALITY_IMPACT_HIGH, "H",
 		cvssv3.ConfidentialityImpact_CONFIDENTIALITY_IMPACT_LOW, "L",
 		cvssv3.ConfidentialityImpact_CONFIDENTIALITY_IMPACT_NONE, "N",
 	)
 	integrity = newResolver(
+		cvssv3.IntegrityImpact_INTEGRITY_IMPACT_UNDEFINED, "X",
 		cvssv3.IntegrityImpact_INTEGRITY_IMPACT_HIGH, "H",
 		cvssv3.IntegrityImpact_INTEGRITY_IMPACT_LOW, "L",
 		cvssv3.IntegrityImpact_INTEGRITY_IMPACT_NONE, "N",
 	)
 	availability = newResolver(
+		cvssv3.AvailabilityImpact_AVAILABILITY_IMPACT_UNDEFINED, "X",
 		cvssv3.AvailabilityImpact_AVAILABILITY_IMPACT_HIGH, "H",
 		cvssv3.AvailabilityImpact_AVAILABILITY_IMPACT_LOW, "L",
 		cvssv3.AvailabilityImpact_AVAILABILITY_IMPACT_NONE, "N",

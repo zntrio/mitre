@@ -420,3 +420,15 @@ message EnvironmentalScore {
   double adjusted_temporal = 8;
   double score = 9;
 }
+
+// Severity scale.
+enum Severity {
+  SEVERITY_INVALID = 0;
+  SEVERITY_UNDEFINED = 1;
+  // Low severity (0.0 - 3.9)
+  SEVERITY_LOW = 2;
+  // Medium severity (4.0 - 6.9)
+  SEVERITY_MEDIUM = 3;
+  // High severity (7.0 - 10.0)
+  SEVERITY_HIGH = 4;
+}
