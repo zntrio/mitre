@@ -1,0 +1,277 @@
+// MIT License
+//
+// Copyright (c) 2019 Thibault NORMAND
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+syntax = "proto3";
+
+package mitre.cvss.v3;
+
+option csharp_namespace = "Mitre.Cvss.V3";
+option go_package = "cvssv3";
+option java_multiple_files = true;
+option java_outer_classname = "CvssProto";
+option java_package = "org.zenithar.mitre.cvss.v3";
+option objc_class_prefix = "MCX";
+option php_namespace = "Mitre\\Cvss\\V3";
+
+// -----------------------------------------------------------------------------
+// Base Metrics
+// -----------------------------------------------------------------------------
+
+// Exploitability Metrics
+//
+// As mentioned, the Exploitability metrics reflect the characteristics of the thing
+// that is vulnerable, which we refer to formally as the vulnerable component.
+// Therefore, each of the Exploitability metrics listed below should be scored relative
+// to the vulnerable component, and reflect the properties of the vulnerability that
+// lead to a successful attack.
+
+// This metric reflects the context by which vulnerability exploitation is
+// possible. This metric value (and consequently the Base score) will be larger
+// the more remote (logically, and physically) an attacker can be in order to
+// exploit the vulnerable component. The assumption is that the number of potential
+// attackers for a vulnerability that could be exploited from across the Internet
+// is larger than the number of potential attackers that could exploit a vulnerability
+// requiring physical access to a device, and therefore warrants a greater score.
+enum AttackVector {
+  ATTACK_VECTOR_INVALID = 0;
+  ATTACK_VECTOR_UNDEFINED = 1;
+  // A vulnerability exploitable with network access means the vulnerable component
+  // is bound to the network stack and the attacker's path is through OSI layer 3
+  // (the network layer). Such a vulnerability is often termed "remotely exploitable"
+  // and can be thought of as an attack being exploitable one or more network hops
+  // away (e.g. across layer 3 boundaries from routers). An example of a network attack
+  // is an attacker causing a denial of service (DoS) by sending a specially crafted
+  // TCP packet from across the public Internet (e.g. CVE 2004 0230).
+  ATTACK_VECTOR_NETWORK = 2;
+  // A vulnerability exploitable with adjacent network access means the vulnerable
+  // component is bound to the network stack, however the attack is limited to the
+  // same shared physical (e.g. Bluetooth, IEEE 802.11), or logical (e.g. local IP subnet)
+  // network, and cannot be performed across an OSI layer 3 boundary (e.g. a router).
+  // An example of an Adjacent attack would be an ARP (IPv4) or neighbor discovery (IPv6)
+  // flood leading to a denial of service on the local LAN segment. See also CVE 2013 6014.
+  ATTACK_VECTOR_ADJACENT = 3;
+  // A vulnerability exploitable with Local access means that the vulnerable component
+  // is not bound to the network stack, and the attacker's path is via read/write/execute
+  // capabilities. In some cases, the attacker may be logged in locally in order to exploit
+  // the vulnerability, otherwise, she may rely on User Interaction to execute a malicious file.
+  ATTACK_VECTOR_LOCAL = 4;
+  // A vulnerability exploitable with Physical access requires the attacker to physically
+  // touch or manipulate the vulnerable component. Physical interaction may be brief
+  // (e.g. evil maid attack [1]) or persistent. An example of such an attack is a cold boot
+  // attack which allows an attacker to access to disk encryption keys after gaining physical
+  // access to the system, or peripheral attacks such as Firewire/USB Direct Memory Access
+  // attacks.
+  ATTACK_VECTOR_PHYSICAL = 5;
+}
+
+// This metric describes the conditions beyond the attacker's control that must exist
+// in order to exploit the vulnerability. As described below, such conditions may
+// require the collection of more information about the target, the presence of
+// certain system configuration settings, or computational exceptions. Importantly,
+// the assessment of this metric excludes any requirements for user interaction in
+// order to exploit the vulnerability (such conditions are captured in the User
+// Interaction metric). This metric value is largest for the least complex attacks.
+enum AttackComplexity {
+  ATTACK_COMPLEXITY_INVALID = 0;
+  ATTACK_COMPLEXITY_UNDEFINED = 1;
+  // Specialized access conditions or extenuating circumstances do not exist.
+  // An attacker can expect repeatable success against the vulnerable component.
+  ATTACK_COMPLEXITY_LOW = 2;
+  // A successful attack depends on conditions beyond the attacker's control.
+  // That is, a successful attack cannot be accomplished at will, but requires
+  // the attacker to invest in some measurable amount of effort in preparation
+  // or execution against the vulnerable component before a successful attack can
+  // be expected. 2 For example, a successful attack may depend on an attacker
+  // overcoming any of the following conditions:
+  // - The attacker must conduct target-specific reconnaissance. For example, on
+  //   target configuration settings, sequence numbers, shared secrets, etc.
+  // - The attacker must prepare the target environment to improve exploit reliability.
+  //   For example, repeated exploitation to win a race condition, or overcoming
+  //   advanced exploit mitigation techniques.
+  // - The attacker must inject herself into the logical network path between the
+  //   target and the resource requested by the victim in order to read and/or
+  //   modify network communications (e.g. man in the middle attack).
+  ATTACK_COMPLEXITY_HIGH = 3;
+}
+
+// This metric describes the level of privileges an attacker must possess before
+// successfully exploiting the vulnerability. This metric is greatest if no
+// privileges are required.
+enum PrivilegeRequired {
+  PRIVILEGE_REQUIRED_INVALID = 0;
+  PRIVILEGE_REQUIRED_UNDEFINED = 1;
+  // The attacker is unauthorized prior to attack, and therefore does not
+  // require any access to settings or files to carry out an attack.
+  PRIVILEGE_REQUIRED_NONE = 2;
+  // The attacker is authorized with (i.e. requires) privileges that provide
+  // basic user capabilities that could normally affect only settings and
+  // files owned by a user. Alternatively, an attacker with Low privileges may
+  // have the ability to cause an impact only to non-sensitive resources.
+  PRIVILEGE_REQUIRED_LOW = 3;
+  // The attacker is authorized with (i.e. requires) privileges that
+  // provide significant (e.g. administrative) control over the vulnerable
+  // component that could affect component-wide settings and files.
+  PRIVILEGE_REQUIRED_HIGH = 4;
+}
+
+// This metric captures the requirement for a user, other than the attacker,
+// to participate in the successful compromise of the vulnerable component.
+// This metric determines whether the vulnerability can be exploited solely at
+// the will of the attacker, or whether a separate user (or user-initiated process)
+// must participate in some manner. This metric value is greatest when no user
+// interaction is required.
+enum UserInteraction {
+  USER_INTERACTION_INVALID = 0;
+  USER_INTERACTION_UNDEFINED = 1;
+  // The vulnerable system can be exploited without interaction from any user.
+  USER_INTERACTION_NONE = 2;
+  // Successful exploitation of this vulnerability requires a user to take
+  // some action before the vulnerability can be exploited. For example, a
+  // successful exploit may only be possible during the installation of an
+  // application by a system administrator.
+  USER_INTERACTION_REQUIRED = 3;
+}
+
+// Scope is used to tell if scoring has impact modification.
+enum Scope {
+  SCOPE_INVALID = 0;
+  SCOPE_UNDEFINED = 1;
+  // An exploited vulnerability can only affect resources managed by the
+  // same authority. In this case the vulnerable component and the impacted
+  // component are the same.
+  SCOPE_UNCHANGED = 2;
+  // An exploited vulnerability can affect resources beyond the authorization
+  // privileges intended by the vulnerable component. In this case the
+  // vulnerable component and the impacted component are different.
+  SCOPE_CHANGED = 3;
+}
+
+// Impact Metrics
+//
+//
+// The Impact metrics refer to the properties of the impacted component. Whether
+// a successfully exploited vulnerability affects one or more components, the
+// impact metrics are scored according to the component that suffers the worst
+// outcome that is most directly and predictably associated with a successful
+// attack. That is, analysts should constrain impacts to a reasonable, final
+// outcome which they are confident an attacker is able to achieve.
+
+// This metric measures the impact to the confidentiality of the information
+// resources managed by a software component due to a successfully exploited
+// vulnerability. Confidentiality refers to limiting information access and
+// disclosure to only authorized users, as well as preventing access by, or
+// disclosure to, unauthorized ones. This metric value increases with the
+// degree of loss to the impacted component.
+enum ConfidentialityImpact {
+  CONFIDENTIALITY_IMPACT_INVALID = 0;
+  CONFIDENTIALITY_IMPACT_UNDEFINED = 1;
+  // There is total loss of confidentiality, resulting in all resources
+  // within the impacted component being divulged to the attacker.
+  // Alternatively, access to only some restricted information is obtained,
+  // but the disclosed information presents a direct, serious impact.
+  // For example, an attacker steals the administrator's password, or
+  // private encryption keys of a web server.
+  CONFIDENTIALITY_IMPACT_HIGH = 2;
+  // There is some loss of confidentiality. Access to some restricted
+  // information is obtained, but the attacker does not have control over
+  // what information is obtained, or the amount or kind of loss is constrained.
+  // The information disclosure does not cause a direct, serious loss to
+  // the impacted component.
+  CONFIDENTIALITY_IMPACT_LOW = 3;
+  // There is no loss of confidentiality within the impacted component.
+  CONFIDENTIALITY_IMPACT_NONE = 4;
+}
+
+// This metric measures the impact to integrity of a successfully exploited
+// vulnerability. Integrity refers to the trustworthiness and veracity of
+// information.
+// This metric value increases with the consequence to the impacted component.
+enum IntegrityImpact {
+  INTEGRITY_IMPACT_INVALID = 0;
+  INTEGRITY_IMPACT_UNDEFINED = 1;
+  // There is a total loss of integrity, or a complete loss of protection.
+  // For example, the attacker is able to modify any/all files protected
+  // by the impacted component. Alternatively, only some files can be modified,
+  // but malicious modification would present a direct, serious consequence
+  // to the impacted component.
+  INTEGRITY_IMPACT_HIGH = 2;
+  // Modification of data is possible, but the attacker does not have control
+  // over the consequence of a modification, or the amount of modification is
+  // constrained. The data modification does not have a direct, serious impact
+  // on the impacted component.
+  INTEGRITY_IMPACT_LOW = 3;
+  // There is no loss of integrity within the impacted component.
+  INTEGRITY_IMPACT_NONE = 4;
+}
+
+// This metric measures the impact to the availability of the impacted component
+// resulting from a successfully exploited vulnerability. While the Confidentiality
+// and Integrity impact metrics apply to the loss of confidentiality or integrity
+// of data (e.g., information, files) used by the impacted component, this metric
+// refers to the loss of availability of the impacted component itself, such as a
+// networked service (e.g., web, database, email). Since availability refers to
+// the accessibility of information resources, attacks that consume network
+// bandwidth, processor cycles, or disk space all impact the availability of an
+// impacted component.
+// This metric value increases with the consequence to the impacted component.
+enum AvailabilityImpact {
+  AVAILABILITY_IMPACT_INVALID = 0;
+  AVAILABILITY_IMPACT_UNDEFINED = 1;
+  // There is total loss of availability, resulting in the attacker being able
+  // to fully deny access to resources in the impacted component; this loss is
+  // either sustained (while the attacker continues to deliver the attack) or
+  // persistent (the condition persists even after the attack has completed).
+  // Alternatively, the attacker has the ability to deny some availability,
+  // but the loss of availability presents a direct, serious consequence to
+  // the impacted component (e.g., the attacker cannot disrupt existing
+  // connections, but can prevent new connections; the attacker can repeatedly
+  // exploit a vulnerability that, in each instance of a successful attack,
+  // leaks a only small amount of memory, but after repeated exploitation
+  // causes a service to become completely unavailable).
+  AVAILABILITY_IMPACT_HIGH = 2;
+  // There is reduced performance or interruptions in resource availability.
+  // Even if repeated exploitation of the vulnerability is possible, the attacker
+  // does not have the ability to completely deny service to legitimate users.
+  // The resources in the impacted component are either partially available all
+  // of the time, or fully available only some of the time, but overall there is
+  // no direct, serious consequence to the impacted component.
+  AVAILABILITY_IMPACT_LOW = 3;
+  // There is no impact to availability within the impacted component.
+  AVAILABILITY_IMPACT_NONE = 4;
+}
+
+// BaseMetrics regroups base CVSS attributes.
+message BaseMetrics {
+  AttackVector attack_vector = 1;
+  AttackComplexity attack_complexity = 2;
+  PrivilegeRequired privilege_required = 3;
+  UserInteraction user_interaction = 4;
+  Scope scope = 5;
+  ConfidentialityImpact confidentiality_impact = 6;
+  IntegrityImpact integrity_impact = 7;
+  AvailabilityImpact availability_impact = 8;
+}
+
+// Vector defines CVSS object attributes.
+message Vector {
+  BaseMetrics base_metrics = 1;
+}
