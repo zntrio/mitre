@@ -34,14 +34,14 @@ func ToString(v *cvssv2.Vector) (string, error) {
 
 // FromString builds a vector instance from a vector string
 func FromString(vs string) (*cvssv2.Vector, error) {
-	res := &cvssv2.Vector{}
-
 	// Split vector string as elements
 	parts := strings.Split(vs, "/")
 
 	if len(parts) < 6 {
 		return nil, xerrors.New("vector: invalid vector string, it should contains at least 6 fields")
 	}
+
+	res := &cvssv2.Vector{}
 
 	// AV:ND/AC:ND/Au:ND/C:ND/I:ND/A:ND/E:ND/RL:ND/RC:ND/CDP:ND/TD:ND/CR:ND/IR:ND/AR:ND
 	for _, part := range parts {
