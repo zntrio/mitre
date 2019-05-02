@@ -131,6 +131,21 @@ func TestVectorFromString(t *testing.T) {
 			expectErr: true,
 		},
 		{
+			name:      "fuzz: 'A:ND/////' string",
+			input:     "A:ND/////",
+			expectErr: true,
+		},
+		{
+			name:      "fuzz: 'Au:ND/////' string",
+			input:     "Au:ND/////",
+			expectErr: true,
+		},
+		{
+			name:      "fuzz: 'AV:ND/////' string",
+			input:     "AC:ND/////",
+			expectErr: true,
+		},
+		{
 			name:      "invalid part length",
 			input:     "AV:N/AC:H/Au:N",
 			expectErr: true,

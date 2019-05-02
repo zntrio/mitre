@@ -78,7 +78,7 @@ func init() {
 		cvssv2.AccessVector_ACCESS_VECTOR_LOCAL, "L",
 		cvssv2.AccessVector_ACCESS_VECTOR_ADJACENT_NETWORK, "A",
 		cvssv2.AccessVector_ACCESS_VECTOR_NETWORK, "N",
-		cvssv2.AccessComplexity_ACCESS_COMPLEXITY_UNDEFINED, "ND",
+		cvssv2.AccessVector_ACCESS_VECTOR_UNDEFINED, "ND",
 	)
 	accessComplexity = newResolver(
 		cvssv2.AccessComplexity_ACCESS_COMPLEXITY_HIGH, "H",
@@ -90,7 +90,7 @@ func init() {
 		cvssv2.Authentication_AUTHENTICATION_MULTIPLE, "M",
 		cvssv2.Authentication_AUTHENTICATION_SINGLE, "S",
 		cvssv2.Authentication_AUTHENTICATION_NONE, "N",
-		cvssv2.AccessComplexity_ACCESS_COMPLEXITY_UNDEFINED, "ND",
+		cvssv2.Authentication_AUTHENTICATION_UNDEFINED, "ND",
 	)
 	confidentialityImpact = newResolver(
 		cvssv2.ConfidentialityImpact_CONFIDENTIALITY_IMPACT_NONE, "N",
@@ -108,7 +108,7 @@ func init() {
 		cvssv2.AvailabilityImpact_AVAILABILITY_IMPACT_NONE, "N",
 		cvssv2.AvailabilityImpact_AVAILABILITY_IMPACT_PARTIAL, "P",
 		cvssv2.AvailabilityImpact_AVAILABILITY_IMPACT_COMPLETE, "C",
-		cvssv2.AccessComplexity_ACCESS_COMPLEXITY_UNDEFINED, "ND",
+		cvssv2.AvailabilityImpact_AVAILABILITY_IMPACT_UNDEFINED, "ND",
 	)
 	exploitability = newResolver(
 		cvssv2.Exploitability_EXPLOITABILITY_UNPROVEN, "U",
