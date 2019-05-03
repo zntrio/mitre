@@ -1,0 +1,345 @@
+// MIT License
+//
+// Copyright (c) 2019 Thibault NORMAND
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+syntax = "proto3";
+
+package mitre.stix.v2;
+
+option csharp_namespace = "Mitre.Stix.V2";
+option go_package = "stixv2";
+option java_multiple_files = true;
+option java_outer_classname = "StixProto";
+option java_package = "org.zenithar.mitre.stix.v2";
+option objc_class_prefix = "MSX";
+option php_namespace = "Mitre\\Stix\\V2";
+
+// -----------------------------------------------------------------
+
+// External references is used to link to external resource.
+message ExternalReference {
+  string source_name = 1;
+  string external_id = 2;
+  string url = 3;
+}
+
+// KillChainPhase describes which pahse of the kill chain the resource in acting.
+message KillChainPhase {
+  string phase_name = 1;
+  string kill_chain_name = 2;
+}
+
+// MarkingDefinition ... .
+message MarkingDefinition {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string definition_type = 9;
+  map<string, string> definitions = 10;
+}
+
+// ObservableObject ... .
+message ObservableObject {
+  string type = 1;
+}
+
+// -----------------------------------------------------------------
+
+// A type of Tactics, Techniques, and Procedures (TTP) that describes
+// ways threat actors attempt to compromise targets.
+message AttackPattern {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  repeated KillChainPhase kill_chain_phases = 13;
+}
+
+// A grouping of adversarial behaviors that describes a set of
+// malicious activities or attacks that occur over a period of time
+// against a specific set of targets.
+message Campaign {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  repeated string aliases = 13;
+  string first_seen = 14;
+  string last_seen = 15;
+  string objective = 16;
+}
+
+// An action taken to either prevent an attack or respond to an attack.
+message CourseOfAction {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+}
+
+// Individuals, organizations, or groups, as well as classes of
+// individuals, organizations, or groups.
+message Identity {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  string identity_class = 13;
+  repeated string sectors = 14;
+  string contact_information = 15;
+}
+
+// Contains a pattern that can be used to detect suspicious or
+// malicious cyber activity.
+message Indicator {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  string pattern = 13;
+  string valid_from = 14;
+  string valid_until = 15;
+  repeated KillChainPhase kill_chain_phases = 16;
+}
+
+// A grouped set of adversarial behaviors and resources with common
+// properties believed to be orchestrated by a single threat actor.
+message IntrusionSet {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  repeated string aliases = 13;
+  string first_seen = 14;
+  string last_seen = 15;
+  repeated string goals = 16;
+  string resource_level = 17;
+  string primary_motivation = 18;
+  repeated string secondary_motivations = 19;
+}
+
+// A type of TTP, also known as malicious code and malicious software,
+// used to compromise the confidentiality, integrity, or availability
+// of a victim’s data or system.
+message Malware {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  repeated KillChainPhase kill_chain_phases = 13;
+}
+
+// Conveys information observed on a system or network (e.g., an IP address).
+message ObservedData {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string first_observed = 11;
+  string last_observed = 12;
+  sint64 number_observed = 13;
+  map<sint64, ObservableObject> objects = 14;
+}
+
+// Collections of threat intelligence focused on one or more topics, such as
+// a description of a threat actor, malware, or attack technique, including
+// contextual details.
+message Report {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  string published = 13;
+  repeated string object_refs = 14;
+}
+
+// Individuals, groups, or organizations believed to be operating with
+// malicious intent.
+message ThreatActor {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  repeated string aliases = 13;
+  repeated string roles = 14;
+  repeated string goals = 15;
+  string sophistication = 16;
+  string resource_level = 17;
+  string primary_motivation = 18;
+  repeated string secondary_motivations = 19;
+  repeated string personal_motivations = 20;
+}
+
+// Legitimate software that can be used by threat actors to perform attacks.
+message Tool {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+  repeated KillChainPhase kill_chain_phases = 13;
+  string tool_version = 14;
+}
+
+// A mistake in software that can be directly used by a hacker to gain
+// access to a system or network.
+message Vulnerability {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string name = 11;
+  string description = 12;
+}
+
+// -----------------------------------------------------------------
+
+// Used to link two SDOs and to describe how they are related to each other.
+message RelationShip {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string relationship_type = 11;
+  string description = 12;
+  string source_ref = 13;
+  string target_ref = 14;
+}
+
+// Denotes the belief that an element of CTI was seen (e.g., indicator, malware).
+message Sighting {
+  string type = 1;
+  string id = 2;
+  string created_by_ref = 3;
+  string created = 4;
+  string modified = 5;
+  string revoked = 6;
+  repeated string labels = 7;
+  repeated ExternalReference external_references = 8;
+  repeated string object_marking_refs = 9;
+  repeated string granular_markings = 10;
+  string first_seen = 11;
+  string last_seen = 12;
+  sint64 count = 13;
+  repeated string sighting_of_ref = 14;
+  repeated string observed_data_refs = 15;
+  repeated string where_sighted_refs = 16;
+  bool summary = 17;
+}
