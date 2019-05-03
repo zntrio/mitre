@@ -32,6 +32,8 @@ option java_package = "org.zenithar.mitre.stix.v2";
 option objc_class_prefix = "MSX";
 option php_namespace = "Mitre\\Stix\\V2";
 
+import "google/protobuf/any.proto";
+
 // -----------------------------------------------------------------
 
 // External references is used to link to external resource.
@@ -73,7 +75,7 @@ message AttackPattern {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -92,7 +94,7 @@ message Campaign {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -112,7 +114,7 @@ message CourseOfAction {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -129,7 +131,7 @@ message Identity {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -149,7 +151,7 @@ message Indicator {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -170,7 +172,7 @@ message IntrusionSet {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -195,7 +197,7 @@ message Malware {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -212,7 +214,7 @@ message ObservedData {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -232,7 +234,7 @@ message Report {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -251,7 +253,7 @@ message ThreatActor {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -275,7 +277,7 @@ message Tool {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -294,7 +296,7 @@ message Vulnerability {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -312,7 +314,7 @@ message RelationShip {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -330,7 +332,7 @@ message Sighting {
   string created_by_ref = 3;
   string created = 4;
   string modified = 5;
-  string revoked = 6;
+  bool revoked = 6;
   repeated string labels = 7;
   repeated ExternalReference external_references = 8;
   repeated string object_marking_refs = 9;
@@ -343,3 +345,5 @@ message Sighting {
   repeated string where_sighted_refs = 16;
   bool summary = 17;
 }
+
+// -----------------------------------------------------------------
