@@ -276,6 +276,25 @@ message Vector {
   BaseMetrics base_metrics = 1;
 }
 
+// Score defines all CVSS intermediate and final calculus.
+message Score {
+  BaseScore base_score = 1;
+}
+
+// BaseScore regroups all calculus attributes for Base Metrics.
+message BaseScore {
+  double attack_vector = 1;
+  double attack_complexity = 2;
+  double privilege_required = 3;
+  double user_interaction = 4;
+  double confidentiality_impact = 5;
+  double integrity_impact = 6;
+  double availability_impact = 7;
+  double impact = 8;
+  double exploitability = 9;
+  double score = 10;
+}
+
 // Severity scale.
 enum Severity {
   SEVERITY_INVALID = 0;
