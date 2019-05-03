@@ -32,8 +32,6 @@ option java_package = "org.zenithar.mitre.stix.v2";
 option objc_class_prefix = "MSX";
 option php_namespace = "Mitre\\Stix\\V2";
 
-import "google/protobuf/any.proto";
-
 // -----------------------------------------------------------------
 
 // External references is used to link to external resource.
