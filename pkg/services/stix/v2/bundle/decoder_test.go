@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestBundleLoader(t *testing.T) {
+func TestBundleDecoder(t *testing.T) {
 
 	files := []string{
 		"identifying-a-threat-actor-profile",
@@ -39,7 +39,7 @@ func TestBundleLoader(t *testing.T) {
 	}
 }
 
-func TestBundleLoaderWithExtension(t *testing.T) {
+func TestBundleDecoderWithExtension(t *testing.T) {
 
 	err := RegisterType("location", func() interface{} { return &map[string]*json.RawMessage{} })
 	if err != nil {

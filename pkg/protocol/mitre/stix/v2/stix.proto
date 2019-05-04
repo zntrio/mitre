@@ -87,14 +87,6 @@ message AttackPattern {
   string name = 11;
   string description = 12;
   repeated KillChainPhase kill_chain_phases = 13;
-  string x_mitre_version = 14;
-  repeated string x_mitre_permissions_required = 15;
-  repeated string x_mitre_platforms = 16;
-  string x_mitre_detection = 17;
-  repeated string x_mitre_contributors = 18;
-  repeated string x_mitre_data_sources = 19;
-  repeated string x_mitre_effective_permissions = 20;
-  repeated string x_mitre_system_requirements = 21;
 }
 
 // A grouping of adversarial behaviors that describes a set of
@@ -217,10 +209,6 @@ message Malware {
   string name = 11;
   string description = 12;
   repeated KillChainPhase kill_chain_phases = 13;
-  string x_mitre_version = 14;
-  repeated string x_mitr_aliases = 15;
-  repeated string x_mitre_platforms = 16;
-  repeated string x_mitre_contributors = 17;
 }
 
 // Conveys information observed on a system or network (e.g., an IP address).
@@ -302,9 +290,6 @@ message Tool {
   string description = 12;
   repeated KillChainPhase kill_chain_phases = 13;
   string tool_version = 14;
-  string x_mitre_version = 15;
-  repeated string x_mitre_platform = 16;
-  repeated string x_mitre_aliases = 17;
 }
 
 // A mistake in software that can be directly used by a hacker to gain
