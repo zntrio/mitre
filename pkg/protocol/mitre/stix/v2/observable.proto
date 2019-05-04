@@ -1,0 +1,296 @@
+// MIT License
+//
+// Copyright (c) 2019 Thibault NORMAND
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+syntax = "proto3";
+
+package mitre.stix.v2;
+
+option csharp_namespace = "Mitre.Stix.V2";
+option go_package = "stixv2";
+option java_multiple_files = true;
+option java_outer_classname = "ObservableProto";
+option java_package = "org.zenithar.mitre.stix.v2";
+option objc_class_prefix = "MSX";
+option php_namespace = "Mitre\\Stix\\V2";
+
+// -----------------------------------------------------------------
+
+// The Artifact Object permits capturing an array of bytes (8-bits), as a base64-encoded
+// string, or linking to a file-like payload.
+message ArtifactObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string mime_type = 3;
+  bytes payload_bin = 4;
+  string url = 5;
+  map<string, string> hashes = 6;
+}
+
+// The AS object represents the properties of an Autonomous System (AS).
+message AutonomousSystemObject {
+  string type = 1;
+  repeated string extensions = 2;
+  sint64 number = 3;
+  string name = 4;
+  string rir = 5;
+}
+
+// The Directory Object represents the properties common to a file system directory.
+message DirectoryObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string path = 3;
+  string path_enc = 4;
+  string created = 5;
+  string modified = 6;
+  string accessed = 7;
+  repeated string contains_refs = 8;
+}
+
+// The Domain Name represents the properties of a network domain name.
+message DomainNameObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string value = 3;
+  repeated string resolves_to_refs = 4;
+}
+
+// The Email Address Object represents a single email address.
+message EmailAddressObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string value = 3;
+  string display_name = 4;
+  string belongs_to_ref = 5;
+}
+
+// The Email Message Object represents an instance of an email message,
+// corresponding to the internet message format described in [RFC5322]
+// and related RFCs.
+message EmailMessageObject {
+  string type = 1;
+  repeated string extensions = 2;
+  bool is_multipart = 3;
+  string date = 4;
+  string content_type = 5;
+  string from_ref = 6;
+  string sender_ref = 7;
+  repeated string to_refs = 8;
+  repeated string cc_refs = 9;
+  repeated string bcc_refs = 10;
+  string subject = 11;
+  repeated string received_lines = 12;
+  repeated EmailHeaderComponent additional_headers_fields = 13;
+  string body = 14;
+  repeated EmailMIMEPartComponent body_multipart = 15;
+  string raw_email_ref = 16;
+}
+
+// EmailHeaderComponent defines additional headers component for Email Object.
+message EmailHeaderComponent {
+  string key = 1;
+  repeated string items = 2;
+}
+
+// Specifies one component of a multi-part email body.
+message EmailMIMEPartComponent {
+  string body = 1;
+  string body_raw_ref = 2;
+  string content_type = 3;
+  string content_disposition = 4;
+}
+
+//  The File Object represents the properties of a file.
+message FileObject {
+  string type = 1;
+  repeated string extensions = 2;
+  map<string, string> hashes = 3;
+  sint64 size = 4;
+  string name = 5;
+  string name_enc = 6;
+  string magic_number_hex = 7;
+  string mime_type = 8;
+  string created = 9;
+  string modified = 10;
+  string accessed = 11;
+  string parent_directory_ref = 12;
+  bool is_encrypted = 13;
+  string encryption_algorithm = 14;
+  string decryption_key = 15;
+  repeated string contains_refs = 16;
+  string content_ref = 17;
+}
+
+// The IPv4 Address Object represents one or more IPv4
+// addresses expressed using CIDR notation.
+message IPv4AddressObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string value = 3;
+  repeated string resolves_to_refs = 4;
+  repeated string belongs_to_refs = 5;
+}
+
+// The IPv6 Address Object represents one or more IPv6
+// addresses expressed using CIDR notation.
+message IPv6AddressObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string value = 3;
+  repeated string resolves_to_refs = 4;
+  repeated string belongs_to_refs = 5;
+}
+
+// The MAC Address Object represents a single Media Access
+// Control (MAC) address.
+message MacAddressObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string value = 3;
+}
+
+// The Mutex Object represents the properties of a mutual
+// exclusion (mutex) object.
+message MutexObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string name = 3;
+}
+
+// The Network Traffic Object represents arbitrary network
+// traffic that originates from a source and is addressed
+// to a destination.
+message NetworkTrafficObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string start = 3;
+  string end = 4;
+  bool is_active = 5;
+  string src_ref = 6;
+  string dst_ref = 7;
+  sint32 src_port = 8;
+  sint32 dst_port = 9;
+  repeated string protocols = 10;
+  sint64 src_byte_count = 11;
+  sint64 dst_byte_count = 12;
+  sint64 src_packets = 13;
+  sint64 dst_packets = 14;
+  map<string, string> ipfix = 15;
+  string src_payload_ref = 16;
+  string dst_payload_ref = 17;
+  repeated string encapsulates_refs = 18;
+  string encapsulated_by_ref = 19;
+}
+
+// The Process Object represents common properties of an instance
+// of a computer program as executed on an operating system.
+message ProcessObject {
+  string type = 1;
+  repeated string extensions = 2;
+  bool is_hidden = 3;
+  int64 pid = 4;
+  string name = 5;
+  string created = 6;
+  string cwd = 7;
+  repeated string arguments = 8;
+  string command_line = 9;
+  map<string, string> environment_variables = 10;
+  repeated string opened_connection_refs = 11;
+  string creator_user_ref = 12;
+  string binary_ref = 13;
+  string parent_ref = 14;
+  repeated string child_refs = 15;
+}
+
+// The Software Object represents high-level properties
+// associated with software, including software products.
+message SoftwareObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string name = 3;
+  string cpe = 4;
+  repeated string languages = 5;
+  string vendor = 6;
+  string version = 7;
+}
+
+// The URL Object represents the properties of a uniform
+// resource locator (URL).
+message URLObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string value = 3;
+}
+
+// The User Account Object represents an instance of any
+// type of user account, including but not limited to operating
+// system, device, messaging service, and social media platform
+// accounts.
+message UserAccountObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string user_id = 3;
+  string account_login = 4;
+  string account_type = 5;
+  string display_name = 6;
+  bool is_service_account = 7;
+  bool is_privileged = 8;
+  bool can_escalate_privs = 9;
+  bool is_disabled = 10;
+  string account_created = 11;
+  string account_expires = 12;
+  string password_last_changed = 13;
+  string account_first_login = 14;
+  string account_last_login = 15;
+}
+
+// The Registry Key Object represents the properties of
+// a Windows registry key.
+message WindowsRegistryKeyObject {
+  string type = 1;
+  repeated string extensions = 2;
+  string key = 3;
+  repeated string values = 4;
+  string modified = 5;
+  string creator_user_ref = 6;
+  sint64 number_of_subkeys = 7;
+}
+
+// The X.509 Certificate Object represents the properties of
+// an X.509 certificate, as defined by ITU recommendation
+// X.509 [X.509]
+message X509CertificateObject {
+  string type = 1;
+  repeated string extensions = 2;
+  bool is_self_signed = 3;
+  map<string, string> hashes = 4;
+  string version = 5;
+  string serial_number = 6;
+  string signature_algorithm = 7;
+  string issuer = 8;
+  string validity_not_before = 9;
+  string validity_not_after = 10;
+  string subject = 11;
+  string subject_public_key_algorithm = 12;
+  string subject_public_key_modulus = 13;
+  int64 subject_public_key_exponent = 14;
+}
