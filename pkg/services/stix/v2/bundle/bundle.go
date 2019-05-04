@@ -3,9 +3,8 @@ package bundle
 import (
 	"encoding/json"
 	"io"
-	"strings"
-	"time"
 
+	jsoniter "github.com/json-iterator/go"
 	"golang.org/x/xerrors"
 
 	stixv2 "go.zenithar.org/mitre/pkg/protocol/mitre/stix/v2"
@@ -23,16 +22,13 @@ type Bundle struct {
 type Stats struct {
 	Count        int64
 	CountPerType map[string]int64
-	Elapsed      int64
 }
 
 // -----------------------------------------------------------------
 
 // Decode an object bundle
 func Decode(reader io.Reader) (*Bundle, *Stats, error) {
-
-	// Add start clock
-	start := time.Now().UTC()
+	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 	// Unmarshal to bundle
 	var b jsonBundle
@@ -48,6 +44,7 @@ func Decode(reader io.Reader) (*Bundle, *Stats, error) {
 		Objects:     make([]interface{}, len(b.Objects)),
 	}
 
+	// Initialize stats result
 	stats := &Stats{
 		Count:        0,
 		CountPerType: map[string]int64{},
@@ -69,12 +66,38 @@ func Decode(reader io.Reader) (*Bundle, *Stats, error) {
 		stats.CountPerType[obj.Type]++
 	}
 
-	// Stop clock
-	end := time.Now().UTC()
-	stats.Elapsed = int64(end.Nanosecond() - start.Nanosecond())
-
 	// Return result
 	return res, stats, nil
+}
+
+// -----------------------------------------------------------------
+
+var typeMap = map[string]func() interface{}{
+	"attack-pattern":     func() interface{} { return &stixv2.AttackPattern{} },
+	"campaign":           func() interface{} { return &stixv2.Campaign{} },
+	"course-of-action":   func() interface{} { return &stixv2.CourseOfAction{} },
+	"identity":           func() interface{} { return &stixv2.Identity{} },
+	"indicator":          func() interface{} { return &stixv2.Indicator{} },
+	"intrusion-set":      func() interface{} { return &stixv2.IntrusionSet{} },
+	"malware":            func() interface{} { return &stixv2.Malware{} },
+	"observed-data":      func() interface{} { return &stixv2.ObservedData{} },
+	"report":             func() interface{} { return &stixv2.Report{} },
+	"threat-actor":       func() interface{} { return &stixv2.ThreatActor{} },
+	"tool":               func() interface{} { return &stixv2.Tool{} },
+	"vulnerability":      func() interface{} { return &stixv2.Vulnerability{} },
+	"relationship":       func() interface{} { return &stixv2.RelationShip{} },
+	"sighting":           func() interface{} { return &stixv2.Sighting{} },
+	"marking-definition": func() interface{} { return &stixv2.MarkingDefinition{} },
+}
+
+// RegisterType register a new type association and a builder for deserialization
+func RegisterType(name string, builder func() interface{}) error {
+	if _, ok := typeMap[name]; !ok {
+		typeMap[name] = builder
+		return nil
+	}
+
+	return xerrors.Errorf("bundle: can't register builder, type '%s' already registered", name)
 }
 
 // -----------------------------------------------------------------
@@ -93,57 +116,33 @@ type jsonObject struct {
 }
 
 func (o *jsonObject) UnmarshalJSON(b []byte) error {
+	var jsoni = jsoniter.ConfigCompatibleWithStandardLibrary
+
+	// Extract meta from object
 	var meta map[string]*json.RawMessage
-	if err := json.Unmarshal(b, &meta); err != nil {
+	if err := jsoni.Unmarshal(b, &meta); err != nil {
 		return xerrors.Errorf("bundle: unable to unmarshal bundle object : %w", err)
 	}
 
 	if t, ok := meta["type"]; ok {
-		if err := json.Unmarshal(*t, &o.Type); err != nil {
+		if t == nil {
+			return xerrors.New("bundle: type attribute found but has nil value")
+		}
+
+		// Unmarshal type meta to use as selector
+		if err := jsoni.Unmarshal(*t, &o.Type); err != nil {
 			return xerrors.Errorf("bundle: unable to unmarshal 'type' value : %w", err)
 		}
 
-		if strings.HasPrefix(o.Type, "x-") {
-			o.Object = &map[string]interface{}{}
+		// Find type builder according meta type
+		if builder, ok := typeMap[o.Type]; ok {
+			o.Object = builder()
 		} else {
-			switch o.Type {
-			case "attack-pattern":
-				o.Object = &stixv2.AttackPattern{}
-			case "campaign":
-				o.Object = &stixv2.Campaign{}
-			case "course-of-action":
-				o.Object = &stixv2.CourseOfAction{}
-			case "identity":
-				o.Object = &stixv2.Identity{}
-			case "indicator":
-				o.Object = &stixv2.Indicator{}
-			case "intrusion-set":
-				o.Object = &stixv2.IntrusionSet{}
-			case "malware":
-				o.Object = &stixv2.Malware{}
-			case "marking-definition":
-				o.Object = &stixv2.MarkingDefinition{}
-			case "observed-data":
-				o.Object = &stixv2.ObservedData{}
-			case "report":
-				o.Object = &stixv2.Report{}
-			case "threat-actor":
-				o.Object = &stixv2.ThreatActor{}
-			case "tool":
-				o.Object = &stixv2.Tool{}
-			case "vulnerability":
-				o.Object = &stixv2.Vulnerability{}
-			case "relationship":
-				o.Object = &stixv2.RelationShip{}
-			case "sighting":
-				o.Object = &stixv2.Sighting{}
-			default:
-				return xerrors.Errorf("bundle: unable to decode object, unhandled '%s' type", o.Type)
-			}
+			return xerrors.Errorf("bundle: unable to find type builder for '%s'", o.Type)
 		}
 
 		// Decode as new object
-		if err := json.Unmarshal(b, o.Object); err != nil {
+		if err := jsoni.Unmarshal(b, o.Object); err != nil {
 			return xerrors.Errorf("bundle: unable to decode '%s' object : %w", o.Type, err)
 		}
 	} else {
