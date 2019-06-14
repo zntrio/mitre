@@ -5,6 +5,7 @@ env:
 builds:
 - env:
     - CGO_ENABLED=0
+  binary: stix2rdf
   goos:
     - linux
     - darwin
@@ -14,6 +15,8 @@ builds:
     - amd64
     - arm
     - arm64
+  hooks:
+    post: /bin/sh script.sh
 
 archives:
   -
@@ -27,3 +30,7 @@ archives:
     format_overrides:
     - goos: windows
       format: zip
+
+sign:
+   artifacts: all
+   signature: "${artifact}.sig"
