@@ -43,6 +43,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Register Att&ck types
+	bundle.RegisterType("x-mitre-tactic", func() interface{} { return &map[string]interface{}{} })
+	bundle.RegisterType("x-mitre-matrix", func() interface{} { return &map[string]interface{}{} })
+
 	// Decode the bundle
 	b, _, err := bundle.Decode(bytes.NewBuffer(data))
 	check(err)
