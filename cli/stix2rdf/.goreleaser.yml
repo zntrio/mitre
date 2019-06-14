@@ -1,6 +1,7 @@
 env:
   - GO111MODULE=on
   - GOPROXY=https://gocenter.io
+
 builds:
 - env:
     - CGO_ENABLED=0
@@ -16,7 +17,7 @@ builds:
 
 archives:
   -
-    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    name_template: 'Stix2RDF_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     replacements:
       darwin: Darwin
       linux: Linux
