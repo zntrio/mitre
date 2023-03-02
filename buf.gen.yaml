@@ -1,0 +1,9 @@
+version: v1
+managed:  
+  enabled: true  
+  go_package_prefix:    
+    default: github.com/zntrio/mitre/api
+plugins:
+  - plugin: buf.build/protocolbuffers/go
+    out: api
+    opt: paths=source_relative

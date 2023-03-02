@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"strings"
 
-	"go.zenithar.org/mitre/pkg/services/stix/v2/bundle"
+	"github.com/zntrio/mitre/stix/v2/bundle"
 )
 
 func init() {
