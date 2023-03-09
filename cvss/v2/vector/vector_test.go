@@ -186,6 +186,11 @@ func TestVectorFromString(t *testing.T) {
 			expectErr: true,
 		},
 		{
+			name:      "regress #1 - Invalid field order",
+			input:     "AV:A/AC:H/Au:N/C:C/I:C/A:C/Au:N",
+			expectErr: true,
+		},
+		{
 			name:      "full vector string",
 			input:     "AV:N/AC:H/Au:N/C:C/I:C/A:C/E:H/RL:U/RC:C/CDP:H/TD:H/CR:H/IR:H/AR:H",
 			expectErr: false,

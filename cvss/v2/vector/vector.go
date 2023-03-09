@@ -1,11 +1,17 @@
+// Package vector provides CVSSv2.0 vector string parsing features.
 package vector
 
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	cvssv2 "github.com/zntrio/mitre/api/mitre/cvss/v2"
+)
+
+var (
+	v2BaseRegexp = regexp.MustCompile(`^AV:[NAL]\/AC:[LMH]\/Au:[NSM]\/C:[NPC]\/I:[NPC]\/A:[NPC](\/E:\b(F|H|U|POC|ND)\b\/RL:\b(W|U|TF|OF|ND)\b\/RC:\b(C|UR|UC|ND)\b)?(\/CDP:\b(N|L|LM|MH|H|ND)\b\/TD:\b(N|L|M|H|ND)\b\/CR:\b(L|M|H|ND)\b\/IR:\b(L|M|H|ND)\b\/AR:\b(L|M|H|ND)\b)?$`)
 )
 
 // ------------------------------------------------------------------------
@@ -33,6 +39,11 @@ func ToString(v *cvssv2.Vector) (string, error) {
 
 // FromString builds a vector instance from a vector string
 func FromString(vs string) (*cvssv2.Vector, error) {
+	// Validate format
+	if !v2BaseRegexp.MatchString(vs) {
+		return nil, fmt.Errorf("%q is not an acceptable vector string", vs)
+	}
+
 	// Split vector string as elements
 	parts := strings.Split(vs, "/")
 
@@ -177,7 +188,7 @@ func applyBaseMetrics(bm *cvssv2.BaseMetrics, category string, value string) err
 		bm.AccessComplexity = mustValue(accessComplexity.ByValue, value, cvssv2.AccessComplexity_ACCESS_COMPLEXITY_INVALID, &err).(cvssv2.AccessComplexity)
 	case "AV": // Access Vector
 		bm.AccessVector = mustValue(accessVector.ByValue, value, cvssv2.AccessVector_ACCESS_VECTOR_INVALID, &err).(cvssv2.AccessVector)
-	case "Au": // Authetication
+	case "Au": // Authentication
 		bm.Authentication = mustValue(authentication.ByValue, value, cvssv2.Authentication_AUTHENTICATION_INVALID, &err).(cvssv2.Authentication)
 	case "C": // Confidentiality
 		bm.ConfidentialityImpact = mustValue(confidentialityImpact.ByValue, value, cvssv2.ConfidentialityImpact_CONFIDENTIALITY_IMPACT_INVALID, &err).(cvssv2.ConfidentialityImpact)
