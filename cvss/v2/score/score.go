@@ -1,19 +1,17 @@
 package score
 
 import (
-	"errors"
+	"fmt"
 
 	cvssv2 "github.com/zntrio/mitre/api/mitre/cvss/v2"
+	"github.com/zntrio/mitre/cvss/v2/vector"
 )
 
 // Evaluate returns the evaluated score of the given vector object
 func Evaluate(v *cvssv2.Vector) (*cvssv2.Score, error) {
-
-	if v == nil {
-		return nil, errors.New("score: unable to evaluate nil vector")
-	}
-	if v.BaseMetrics == nil {
-		return nil, errors.New("score: unable to evaluate invalid vector, missing base metrics")
+	// Validate vector object
+	if err := vector.Validate(v); err != nil {
+		return nil, fmt.Errorf("unable to validate the given vecotr object: %w", err)
 	}
 
 	// Calculate intermediary values
